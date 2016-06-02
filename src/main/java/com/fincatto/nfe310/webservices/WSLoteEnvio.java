@@ -40,8 +40,8 @@ class WSLoteEnvio {
         this.config = config;
     }
 
-    NFLoteEnvioRetorno enviaLoteAssinado(final String loteAssinadoXml) throws Exception {
-        return this.comunicaLote(loteAssinadoXml, NFModelo.NFE);
+    NFLoteEnvioRetorno enviaLoteAssinado(final String loteAssinadoXml, final NFModelo modelo) throws Exception {
+        return this.comunicaLote(loteAssinadoXml, modelo);
     }
 
     NFLoteEnvioRetornoDados enviaLote(final NFLoteEnvio lote) throws Exception {
