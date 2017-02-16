@@ -1,9 +1,9 @@
 Nota Fiscal Eletrônica
 ===
 Comunicador de nota fiscal e nota fiscal do consumidor da [fazenda](http://www.nfe.fazenda.gov.br/portal/principal.aspx).<br/>
-[![Build Status](https://api.travis-ci.org/wmixvideo/nfe.png)](http://travis-ci.org/#!/wmixvideo/nfe)
+[![Build Status](https://travis-ci.org/wmixvideo/nfe.svg?branch=master)](http://travis-ci.org/#!/wmixvideo/nfe)
 [![Coverage Status](https://coveralls.io/repos/wmixvideo/nfe/badge.svg?branch=master&service=github)](https://coveralls.io/github/wmixvideo/nfe?branch=master)
-[![Maven Central](https://img.shields.io/badge/maven%20central-1.2.0-blue.svg)](http://search.maven.org/#artifactdetails|com.github.wmixvideo|nfe|1.2.0|)
+[![Maven Central](https://img.shields.io/badge/maven%20central-2.0.0-blue.svg)](http://search.maven.org/#artifactdetails|com.github.wmixvideo|nfe|2.0.0|)
 [![Apache 2.0 License](https://img.shields.io/badge/license-apache%202.0-green.svg) ](https://github.com/wmixvideo/nfe/blob/master/LICENSE)
 
 ## Atenção
@@ -22,7 +22,7 @@ Caso não possua conhecimento técnico para criar notas fiscais, um profissional
 <dependency>
   <groupId>com.github.wmixvideo</groupId>
   <artifactId>nfe</artifactId>
-  <version>1.2.0</version>
+  <version>2.0.2</version>
 </dependency>
 ```
 
@@ -88,7 +88,7 @@ Considere para os exemplos abaixo que **config** seja uma instância da implemen
 
 #### Status dos webservices
 ```java
-NFStatusServicoConsultaRetorno retorno = new WSFacade(config).consultaStatus(NFUnidadeFederativa.SC);
+NFStatusServicoConsultaRetorno retorno = new WSFacade(config).consultaStatus(NFUnidadeFederativa.SC, NFModelo.NFE);
 System.out.println(retorno.getStatus());
 System.out.println(retorno.getMotivo());
 ```
@@ -177,16 +177,18 @@ String xmlNotaProcessadaPeloSefaz = notaProcessada.toString();
 * Gera o XML dos objetos de maneira simples, invocando o metodo toString() dá conta do recado.
 
 ## Serviços disponíveis
-| Serviço           | Status              |
-| ----------------- | :-----------------: |
-| Envio lote        | Estável             |
-| Consulta lote     | Estável             |
-| Consulta status   | Estável             |
-| Consulta nota     | Estável             |
-| Corrige nota      | Estável             |
-| Cancela nota      | Estável             |
-| Inutiliza nota    | Estável             |
-| Consulta cadastro | Estável             |
+| Serviço                       | Status              |
+| ----------------------------- | :-----------------: |
+| Envio lote                    | Estável             |
+| Consulta lote                 | Estável             |
+| Consulta status               | Estável             |
+| Consulta nota                 | Estável             |
+| Download nota                 | Estável             |
+| Corrige nota                  | Estável             |
+| Cancela nota                  | Estável             |
+| Inutiliza nota                | Estável             |
+| Consulta cadastro             | Estável             |
+| Manifestação de destinatário  | Estável             |
 
 ## Requisitos
 
@@ -211,6 +213,15 @@ public static void main(String args[]){
     }
 }
 ```
+
+##Sugestão
+Para a cadeia de certificados da SEFAZ necessária para o acesso, utilize a cadeia da unidade certificadora que emitiu o seu certificado. Após fazer o download da cadeia de certificado você obterá um arquivo no formato .cer como o exemplo abaixo:
+* certificado.cer
+
+Com este arquivo é possível gerar a sua chave jks através do seguinte comando:
+<b>
+keytool -import -alias certificado -keystore certificado.jks -file /path_arquivo/certificado.cer
+</b>
 
 ## Licença
 Apache 2.0

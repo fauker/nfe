@@ -1,11 +1,15 @@
 package com.fincatto.nfe310.webservices;
 
+import java.io.StringReader;
 import java.util.Iterator;
 
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +21,6 @@ import com.fincatto.nfe310.classes.lote.envio.NFLoteEnvio;
 import com.fincatto.nfe310.classes.lote.envio.NFLoteEnvioRetorno;
 import com.fincatto.nfe310.classes.lote.envio.NFLoteEnvioRetornoDados;
 import com.fincatto.nfe310.classes.nota.NFNota;
-import com.fincatto.nfe310.classes.nota.NFNotaInfo;
 import com.fincatto.nfe310.classes.nota.NFNotaInfoSuplementar;
 import com.fincatto.nfe310.parsers.NotaParser;
 import com.fincatto.nfe310.persister.NFPersister;
@@ -48,9 +51,9 @@ class WSLoteEnvio {
         // adiciona a chave e o dv antes de assinar
         for (final NFNota nota : lote.getNotas()) {
             final NFGeraChave geraChave = new NFGeraChave(nota);
-            final NFNotaInfo notaInfo = nota.getInfo();
-            notaInfo.setIdentificador(geraChave.getChaveAcesso());
-            notaInfo.getIdentificacao().setDigitoVerificador(geraChave.getDV());
+            nota.getInfo().getIdentificacao().setCodigoRandomico(StringUtils.defaultIfBlank(nota.getInfo().getIdentificacao().getCodigoRandomico(), geraChave.geraCodigoRandomico()));
+            nota.getInfo().getIdentificacao().setDigitoVerificador(geraChave.getDV());
+            nota.getInfo().setIdentificador(geraChave.getChaveAcesso());
         }
 
         // assina o lote
@@ -101,7 +104,9 @@ class WSLoteEnvio {
         final NfeCabecMsgE cabecalhoSOAP = this.getCabecalhoSOAP();
         WSLoteEnvio.LOGGER.debug(omElement.toString());
 
-        final NFAutorizador31 autorizador = NFAutorizador31.valueOfCodigoUF(this.config.getCUF());
+        //define o tipo de emissao
+        final NFAutorizador31 autorizador = NFAutorizador31.valueOfTipoEmissao(this.config.getTipoEmissao(), this.config.getCUF());
+
         final String endpoint = NFModelo.NFE.equals(modelo) ? autorizador.getNfeAutorizacao(this.config.getAmbiente()) : autorizador.getNfceAutorizacao(this.config.getAmbiente());
         if (endpoint == null) {
             throw new IllegalArgumentException("Nao foi possivel encontrar URL para Autorizacao " + modelo.name() + ", autorizador " + autorizador.name());
@@ -123,7 +128,11 @@ class WSLoteEnvio {
     }
 
     private OMElement nfeToOMElement(final String documento) throws XMLStreamException {
-        final OMElement ome = AXIOMUtil.stringToOM(documento);
+        final XMLInputFactory factory = XMLInputFactory.newInstance();
+        factory.setProperty(XMLInputFactory.IS_COALESCING, false);
+        XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(documento));        
+        StAXOMBuilder builder = new StAXOMBuilder(reader);
+        final OMElement ome = builder.getDocumentElement();
         final Iterator<?> children = ome.getChildrenWithLocalName(WSLoteEnvio.NFE_ELEMENTO);
         while (children.hasNext()) {
             final OMElement omElement = (OMElement) children.next();

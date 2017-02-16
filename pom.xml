@@ -4,7 +4,7 @@
     <groupId>com.github.wmixvideo</groupId>
     <artifactId>nfe</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.3-SNAPSHOT</version>
     <name>nfe</name>
     <description>Biblioteca de comunicacao de nota fiscal eletronica brasileira</description>
     <url>https://github.com/wmixvideo/nfe</url>
@@ -29,6 +29,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <axis2.version>1.6.4</axis2.version>
         <joda.version>2.9.3</joda.version>
+        <slf4j.version>1.7.21</slf4j.version>
         <junit.version>4.12</junit.version>
     </properties>
 
@@ -51,7 +52,6 @@
     </developers>
 
     <dependencies>
-
         <!-- Simple Xml Framework -->
         <dependency>
             <groupId>org.simpleframework</groupId>
@@ -95,10 +95,19 @@
             <version>${axis2.version}</version>
         </dependency>
 
+        <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.21</version>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!-- Unit testing -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -168,11 +177,16 @@
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>2.7</version>
                 <configuration>
-                    <format>xml</format>
+                	<formats>
+                    	<format>html</format>
+                    	<format>xml</format>
+                	</formats>
                     <maxmem>256m</maxmem>
                     <aggregate>true</aggregate>
                     <instrumentation>
                         <excludes>
+                            <exclude>com/fincatto/nfe310/webservices/*.class</exclude>
+                            <exclude>com/fincatto/nfe310/webservices/downloadnf/*.class</exclude>
                             <exclude>com/fincatto/nfe310/webservices/gerado/*.class</exclude>
                             <exclude>com/fincatto/nfe310/webservices/nota/consulta/*.class</exclude>
                             <exclude>com/fincatto/nfe310/webservices/statusservico/consulta/*.class</exclude>
@@ -224,7 +238,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.5.3</version>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <useReleaseProfile>false</useReleaseProfile>
@@ -248,7 +262,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
+                <version>2.10.4</version>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <failOnError>false</failOnError>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>

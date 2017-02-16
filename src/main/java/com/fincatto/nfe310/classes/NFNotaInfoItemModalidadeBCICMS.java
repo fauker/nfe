@@ -1,6 +1,6 @@
 package com.fincatto.nfe310.classes;
 
-public enum NFNotaInfoItemImpostoICMSModalidadeBaseCalculo {
+public enum NFNotaInfoItemModalidadeBCICMS {
 
     MVA("0", "Margem de valor agregado"),
     PAUTA("1", "Pauta"),
@@ -10,7 +10,7 @@ public enum NFNotaInfoItemImpostoICMSModalidadeBaseCalculo {
     private final String codigo;
     private final String descricao;
 
-    NFNotaInfoItemImpostoICMSModalidadeBaseCalculo(final String codigo, final String descricao) {
+    NFNotaInfoItemModalidadeBCICMS(final String codigo, final String descricao) {
         this.codigo = codigo;
         this.descricao = descricao;
     }
@@ -23,8 +23,8 @@ public enum NFNotaInfoItemImpostoICMSModalidadeBaseCalculo {
         return this.descricao;
     }
 
-    public static NFNotaInfoItemImpostoICMSModalidadeBaseCalculo valueOfCodigo(final String codigo) {
-        for (final NFNotaInfoItemImpostoICMSModalidadeBaseCalculo modalidade : NFNotaInfoItemImpostoICMSModalidadeBaseCalculo.values()) {
+    public static NFNotaInfoItemModalidadeBCICMS valueOfCodigo(final String codigo) {
+        for (final NFNotaInfoItemModalidadeBCICMS modalidade : NFNotaInfoItemModalidadeBCICMS.values()) {
             if (modalidade.getCodigo().equals(codigo)) {
                 return modalidade;
             }
