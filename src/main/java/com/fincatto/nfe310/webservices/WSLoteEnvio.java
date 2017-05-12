@@ -1,10 +1,14 @@
 package com.fincatto.nfe310.webservices;
 
+import java.io.StringReader;
 import java.util.Iterator;
 
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +32,9 @@ import com.fincatto.nfe310.webservices.gerado.NfeAutorizacaoStub.NfeAutorizacaoL
 import com.fincatto.nfe310.webservices.gerado.NfeAutorizacaoStub.NfeCabecMsg;
 import com.fincatto.nfe310.webservices.gerado.NfeAutorizacaoStub.NfeCabecMsgE;
 import com.fincatto.nfe310.webservices.gerado.NfeAutorizacaoStub.NfeDadosMsg;
-import java.io.StringReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 
 class WSLoteEnvio {
-
+	
     private static final String NFE_ELEMENTO = "NFe";
     private static final Logger LOGGER = LoggerFactory.getLogger(WSLoteEnvio.class);
     private final NFeConfig config;
